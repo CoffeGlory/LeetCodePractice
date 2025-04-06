@@ -23,6 +23,8 @@ public class A4_MedianOfTwoSortedArray {
     
     public double findMedianSortedArrays(int[] nums1, int[] nums2){
         double result = 0.0;
+
+        //swap that make sure nums2 always >= nums1
         if(nums1.length > nums2.length){
             int[] temp = nums1;
             nums1 = nums2;
@@ -40,24 +42,32 @@ public class A4_MedianOfTwoSortedArray {
         int right = m;
 
         while(left < right){
-            int i = left + (right - left + 1) / 2;
-            int j = totalLeft - i;
-            if(nums1[i - 1] > nums2[j]){
-                right = i - 1;   
-            }else{
-                left = i;
+            // i and j are the divide index
+            int i = left + (right - left + 1) / 2; //nums1's divide index
+            int j = totalLeft - i;  //nums2's divide index
+
+            //specifying the correct index that obey the left parts always smaller than right parts.
+            if(nums1[i - 1] > nums2[j]){ //if the nums1-left-index is larger than the nums2-right-index
+
+                right = i - 1;   //move 1 nums2' divide index left
+
+            }else{ //left <= right case 
+
+                left = i; //if not left equals to next index
             }
         }
+        //after iteration, left contains value that maximum sufficient median index
 
         int i = left;
         int j = totalLeft - i;
 
         //Ternary Operator that is used to check if the index is out of bound
-        int nums1LeftMax = i == 0 ? Integer.MIN_VALUE : nums1[i - 1];
-        int nums1RightMin = i == m ? Integer.MAX_VALUE : nums1[i];
-        int nums2LeftMax = j == 0 ? Integer.MIN_VALUE : nums2[j - 1];
+        int nums1LeftMax = i == 0 ? Integer.MIN_VALUE : nums1[i - 1]; //if i == 0, means nums1 left is empty
+        int nums1RightMin = i == m ? Integer.MAX_VALUE : nums1[i];    // i = m means nums 1 right is empty
+        int nums2LeftMax = j == 0 ? Integer.MIN_VALUE : nums2[j - 1]; // same for nums2,  these Ternary operator are preventing extreme situation from not processing
         int nums2RightMin = j == n ? Integer.MAX_VALUE : nums2[j];
 
+        //after finding array dividing, choose the correct median number
         if (((m+n)%2) ==1){
             result = Math.max(nums1LeftMax, nums2LeftMax);
             
